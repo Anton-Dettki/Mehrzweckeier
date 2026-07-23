@@ -1,0 +1,122 @@
+{
+  "name": "mehrzweckeier",
+  "displayName": "Mehrzweckeier",
+  "description": "Satirischer Merz-Kopf für VSCode und Cursor: Idle-Sprüche, BIP-WPM, Streaks und Turbo-Merz.",
+  "version": "0.1.0",
+  "publisher": "mehrzweckeier",
+  "license": "MIT",
+  "icon": "media/merz-normal.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anton-Dettki/Mehrzweckeier.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Anton-Dettki/Mehrzweckeier/issues"
+  },
+  "homepage": "https://github.com/Anton-Dettki/Mehrzweckeier#readme",
+  "keywords": [
+    "satire",
+    "merz",
+    "fun",
+    "productivity",
+    "wpm",
+    "typing"
+  ],
+  "engines": {
+    "vscode": "^1.125.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mehrzweckeier.showMerz",
+        "title": "Mehrzweckeier: Merz anzeigen"
+      },
+      {
+        "command": "mehrzweckeier.resetStats",
+        "title": "Mehrzweckeier: Statistik zurücksetzen"
+      },
+      {
+        "command": "mehrzweckeier.toggle",
+        "title": "Mehrzweckeier: Aktivieren/Deaktivieren"
+      }
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "mehrzweckeier",
+          "title": "Mehrzweckeier",
+          "icon": "media/egg.svg"
+        }
+      ]
+    },
+    "views": {
+      "mehrzweckeier": [
+        {
+          "type": "webview",
+          "id": "mehrzweckeier.merzView",
+          "name": "Mehrzweckeier",
+          "retainContextWhenHidden": true
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Mehrzweckeier",
+      "properties": {
+        "mehrzweckeier.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Aktiviert den satirischen Mehrzweckeier-Begleiter."
+        },
+        "mehrzweckeier.idleSeconds": {
+          "type": "number",
+          "default": 20,
+          "minimum": 5,
+          "description": "Sekunden ohne Tippen zwischen Idle-Sprüchen von Merz."
+        },
+        "mehrzweckeier.streakThreshold": {
+          "type": "number",
+          "default": 100,
+          "minimum": 10,
+          "description": "Tastenanschläge ohne längere Pause bis zum Applaus."
+        },
+        "mehrzweckeier.streakPauseSeconds": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "description": "Pause in Sekunden, nach der die aktuelle Typing-Streak endet."
+        },
+        "mehrzweckeier.turboWpm": {
+          "type": "number",
+          "default": 80,
+          "minimum": 20,
+          "description": "WPM-Schwellwert für Turbo-Merz."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run check-types && node esbuild.js --production",
+    "compile": "npm run check-types && npm run build",
+    "watch": "npm-run-all -p watch:*",
+    "watch:types": "tsc --noEmit --watch",
+    "watch:esbuild": "node esbuild.js --watch",
+    "build": "node esbuild.js",
+    "check-types": "tsc --noEmit",
+    "package": "vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "^1.125.0",
+    "@vscode/vsce": "^2.32.0",
+    "esbuild": "^0.23.1",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3"
+  }
+}

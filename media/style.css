@@ -1,0 +1,375 @@
+:root {
+  --merz-bg: color-mix(in srgb, var(--vscode-panel-background) 86%, #f0c15a 14%);
+  --merz-ink: var(--vscode-foreground);
+  --merz-muted: var(--vscode-descriptionForeground);
+  --merz-accent: #f0c15a;
+  --merz-accent-strong: #ffb21c;
+  --merz-card: color-mix(in srgb, var(--vscode-editor-background) 86%, #1f1a10 14%);
+  --merz-border: color-mix(in srgb, var(--vscode-panel-border) 70%, #f0c15a 30%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  position: relative;
+  z-index: 0;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--merz-ink);
+  background: var(--vscode-panel-background);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  overflow: hidden;
+}
+
+.plenumBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.9) brightness(0.62) contrast(0.95);
+  opacity: 0.42;
+  pointer-events: none;
+  user-select: none;
+}
+
+body::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  background:
+    radial-gradient(circle at 30% 12%, color-mix(in srgb, var(--merz-accent) 18%, transparent), transparent 38%),
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--merz-bg) 82%, transparent),
+      color-mix(in srgb, var(--vscode-panel-background) 90%, transparent)
+    );
+  pointer-events: none;
+}
+
+.audioControls {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 8px;
+  border: 1px solid color-mix(in srgb, var(--merz-border) 70%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vscode-editor-background) 96%, var(--merz-accent) 4%);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  pointer-events: auto;
+}
+
+.audioButton {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--merz-ink);
+  cursor: pointer;
+}
+
+.audioButton:hover {
+  background: color-mix(in srgb, var(--merz-accent) 18%, transparent);
+}
+
+.audioIcon {
+  grid-area: 1 / 1;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.audioIcon--off {
+  display: none;
+}
+
+.audioButton.is-muted .audioIcon--on {
+  display: none;
+}
+
+.audioButton.is-muted .audioIcon--off {
+  display: block;
+}
+
+.volumeLabel {
+  display: flex;
+  align-items: center;
+  min-width: 72px;
+}
+
+#volumeSlider {
+  width: 72px;
+  height: 4px;
+  margin: 0;
+  accent-color: var(--merz-accent-strong);
+  cursor: pointer;
+}
+
+.stage {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 108px minmax(120px, 1fr);
+  grid-template-rows: 1fr auto;
+  gap: 8px 14px;
+  align-items: end;
+  min-height: 156px;
+  padding: 18px 18px 14px;
+}
+
+.stage::before {
+  position: absolute;
+  inset: 10px;
+  pointer-events: none;
+  content: "";
+  border: 1px solid color-mix(in srgb, var(--merz-border) 78%, transparent);
+  border-radius: 22px;
+  opacity: 0.7;
+}
+
+.merzButton {
+  position: relative;
+  z-index: 2;
+  grid-row: 1 / 3;
+  align-self: end;
+  width: 102px;
+  height: 102px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 20%, rgba(255, 255, 255, 0.24), transparent 42%),
+    color-mix(in srgb, var(--vscode-editor-background) 84%, var(--merz-accent) 16%);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px color-mix(in srgb, var(--merz-border) 72%, transparent);
+  cursor: default;
+  animation: merz-bob 3.8s ease-in-out infinite;
+}
+
+.merzButton img {
+  display: block;
+  width: 104px;
+  height: 104px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 999px;
+  transform: translateY(-3px) scale(1.06);
+}
+
+.speech {
+  position: relative;
+  z-index: 3;
+  align-self: end;
+  max-width: 360px;
+  margin-bottom: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--merz-border);
+  border-radius: 18px 18px 18px 4px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent),
+    var(--merz-card);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.speech::after {
+  position: absolute;
+  bottom: 10px;
+  left: -8px;
+  width: 14px;
+  height: 14px;
+  content: "";
+  background: var(--merz-card);
+  border-bottom: 1px solid var(--merz-border);
+  border-left: 1px solid var(--merz-border);
+  transform: rotate(45deg);
+}
+
+.speech.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.speech p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.stats {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  color: var(--merz-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.stats span {
+  padding: 4px 7px;
+  border: 1px solid color-mix(in srgb, var(--merz-border) 62%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--vscode-editor-background) 80%, transparent);
+}
+
+.speedlines {
+  position: absolute;
+  inset: 18px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.speedlines span {
+  position: absolute;
+  width: 46px;
+  height: 2px;
+  border-radius: 99px;
+  background: var(--merz-accent-strong);
+  transform-origin: left center;
+  animation: line-rush 420ms linear infinite;
+}
+
+.speedlines span:nth-child(1) {
+  top: 30%;
+  right: 10%;
+  transform: rotate(-18deg);
+}
+
+.speedlines span:nth-child(2) {
+  top: 50%;
+  right: 3%;
+  animation-delay: 120ms;
+}
+
+.speedlines span:nth-child(3) {
+  bottom: 24%;
+  right: 18%;
+  transform: rotate(14deg);
+  animation-delay: 220ms;
+}
+
+.speedlines span:nth-child(4) {
+  bottom: 42%;
+  left: 22px;
+  transform: rotate(8deg);
+  animation-delay: 60ms;
+}
+
+.stage[data-mood="turbo"] .merzButton {
+  animation: turbo-shake 480ms steps(2, end) infinite;
+}
+
+.stage[data-mood="turbo"] .speedlines {
+  opacity: 0.95;
+}
+
+.stage[data-mood="applaud"] .merzButton,
+.stage.is-applauding .merzButton {
+  animation: applause-bounce 620ms cubic-bezier(0.25, 1.5, 0.5, 1) infinite;
+}
+
+.stage.is-applauding::after {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  z-index: 1;
+  content: "Leistung!";
+  color: var(--merz-accent-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(9deg);
+  animation: slogan-pop 900ms ease both;
+}
+
+.stage.is-disabled {
+  filter: grayscale(0.85);
+  opacity: 0.62;
+}
+
+@keyframes merz-bob {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes turbo-shake {
+  0% {
+    transform: translate(0, 0) rotate(-2deg);
+  }
+  100% {
+    transform: translate(2px, -2px) rotate(2deg);
+  }
+}
+
+@keyframes applause-bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.04);
+  }
+}
+
+@keyframes line-rush {
+  0% {
+    opacity: 0;
+    transform: translateX(14px) scaleX(0.4);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-30px) scaleX(1.2);
+  }
+}
+
+@keyframes slogan-pop {
+  from {
+    opacity: 0;
+    transform: translateY(12px) rotate(9deg) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(9deg) scale(1);
+  }
+}
+
+@media (max-width: 260px) {
+  .stage {
+    grid-template-columns: 92px 1fr;
+    padding: 12px;
+  }
+
+  .merzButton,
+  .merzButton img {
+    width: 88px;
+    height: 88px;
+  }
+}
